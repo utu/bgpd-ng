@@ -1,10 +1,10 @@
 CC = g++
-CFLAGS = -g
-LDFLAGS =
+CFLAGS = -g -I/opt/local/include -O0 -Wall
+LDFLAGS = -L/opt/local/lib
 
 all: bgpd-ng
 
-bgpd-ng: main.o SocketListener.o Socket.o
+bgpd-ng: main.o SocketListener.o Socket.o ServerSocket.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 main.o: main.cpp
@@ -14,6 +14,9 @@ SocketListener.o: SocketListener.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 Socket.o: Socket.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+	
+ServerSocket.o: ServerSocket.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 

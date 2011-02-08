@@ -2,7 +2,7 @@
 #define Socket_HPP_
 
 #include <sys/types.h>
-#include <sys/Socket.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>

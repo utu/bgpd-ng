@@ -1,8 +1,13 @@
 #include "Socket.hpp"
 #include "string.h"
-#include <string.h>
+#include <iostream>
+#include <string>
 #include <errno.h>
-#include <fcntl.h>
+#include <fcntl.h>		// file attribute control
+#include <sys/socket.h>	// unix sockets
+#include <netinet/in.h> // protocol numbers
+
+// in.h: IPPROTO_TCP
 
 Socket::Socket() : m_sock(-1) {
 	memset(&m_addr, 0, sizeof(m_addr));
@@ -14,16 +19,24 @@ Socket::~Socket() {
 }
 
 bool Socket::create() {
-	m_sock = Socket(AF_INET, SOCK_STREAM, 0);
+	m_sock = socket(AF_INET, SOCK_STREAM, 0);
 
 	if (!is_valid())
 		return false;
 
 	// TIME_WAIT - argh
 	int on = 1;
-	if (setsockopt(m_sock, SOL_Socket, SO_REUSEADDR, (const char*) &on,
+	if (setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, (const char*) &on,
 			sizeof(on)) == -1)
 		return false;
+
+    // To drop SIGPIPE if there is no receiving host
+#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
+	int nos = 1;
+	if (setsockopt(m_sock, SOL_SOCKET, SO_NOSIGPIPE, (const char*) &nos,
+			sizeof(nos)) == -1)
+		return false;
+#endif
 
 	return true;
 
@@ -75,7 +88,12 @@ bool Socket::accept(Socket& new_Socket) const {
 }
 
 bool Socket::send(const std::string s) const {
+// Darwin doesn't support MSG_NOSIGNAL flag. Check socket initialization.
+#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
+	int status = ::send(m_sock, s.c_str(), s.size(), 0);
+#else
 	int status = ::send(m_sock, s.c_str(), s.size(), MSG_NOSIGNAL);
+#endif
 	if (status == -1) {
 		return false;
 	} else {
