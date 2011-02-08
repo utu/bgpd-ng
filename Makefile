@@ -2,17 +2,24 @@ CC = g++
 CFLAGS = -g
 LDFLAGS =
 
-all: socketlistener
+all: bgpd-ng
 
-socketlistener: socketlistener.o
+bgpd-ng: main.o SocketListener.o Socket.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
-socketlistener.o: socketlistener.cpp
+main.o: main.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+SocketListener.o: SocketListener.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+Socket.o: Socket.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 
 clean:
 	rm -fr *.o
-	rm socketlistener
+	rm bgpd-ng
 
 # This is GNU makefile extension to notify that roughly means: 'clean' does
 # not depend on any files in order to call it.
