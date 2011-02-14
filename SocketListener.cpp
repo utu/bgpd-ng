@@ -8,16 +8,24 @@
 #include "ServerSocket.hpp"
 
 SocketListener::SocketListener(int port) : sock_port(port) {
-
+}
+SocketListener::SocketListener(const SocketListener& source): sock_port(source.sock_port) {
 }
 SocketListener::~SocketListener() {}
 
-int SocketListener::listen() {
+void SocketListener::start() {
+	m_Thread = boost::thread(&SocketListener::run, this);
+}
+void SocketListener::join() {
+	m_Thread.join();
+}
+
+void SocketListener::run() {
 
 	std::cout << "running....\n";
 	try {
 		// Create the socket
-		ServerSocket server(30000);
+		ServerSocket server(sock_port);
 
 		while (true) {
 			ServerSocket new_sock;
@@ -28,7 +36,7 @@ int SocketListener::listen() {
 				while (true) {
 					std::string data;
 					new_sock >> data;
-					new_sock << data;
+					std::cout << data;
 				}
 			} catch (SocketException& se) {
 			}
@@ -37,5 +45,5 @@ int SocketListener::listen() {
 		std::cout << "Exception was caught:" << e.what()
 				<< "\nExiting.\n";
 	}
-	return 0;
 }
+

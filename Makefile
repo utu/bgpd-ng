@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -g -I/opt/local/include -O0 -Wall
-LDFLAGS = -L/opt/local/lib
+LDFLAGS = -L/opt/local/lib -lboost_thread-mt
 
 all: bgpd-ng
 
