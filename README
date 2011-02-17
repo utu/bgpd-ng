@@ -1,3 +1,14 @@
+== Prequisite
 
 You should have
 	> Boost 1.45
+	> GNU make framework (debian build-tools)
+
+== Installing and testing
+
+$ cd /dir/bgpd-ng
+$ make
+$ bgpd-ng
+
+$ nc localhost 30000
+$ uliuliuliTESTi
