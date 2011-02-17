@@ -1,26 +1,28 @@
 #include <boost/thread.hpp>
+#include <boost/regex.hpp>
 #include <exception>
 #include <iostream>
 #include <string>
-#include "SocketListener.hpp"
+#include "SocketExample.hpp"
 #include "SocketException.hpp"
 #include "Socket.hpp"
 #include "ServerSocket.hpp"
 
-SocketListener::SocketListener(int port) : sock_port(port) {
+SocketExample::SocketExample(int port) : sock_port(port) {
 }
-SocketListener::SocketListener(const SocketListener& source): sock_port(source.sock_port) {
+SocketExample::SocketExample(const SocketExample& source): sock_port(source.sock_port) {
 }
-SocketListener::~SocketListener() {}
+SocketExample::~SocketExample() {}
 
-void SocketListener::start() {
-	m_Thread = boost::thread(&SocketListener::run, this);
+void SocketExample::start() {
+	m_Thread = boost::thread(&SocketExample::run, this);
 }
-void SocketListener::join() {
+void SocketExample::join() {
 	m_Thread.join();
 }
 
-void SocketListener::run() {
+void SocketExample::run() {
+	boost::regex  expression("^omg_lol die.*");
 
 	std::cout << "running....\n";
 	try {
@@ -36,6 +38,11 @@ void SocketListener::run() {
 				while (true) {
 					std::string data;
 					new_sock >> data;
+
+					boost::cmatch match;
+					if (regex_match(data.c_str(), match, expression)) {
+						throw(SocketException(std::string(match[0])));
+					}
 					std::cout << data;
 				}
 			} catch (SocketException& se) {

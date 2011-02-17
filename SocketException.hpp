@@ -1,6 +1,7 @@
 #ifndef SOCKETEXCEPTION_HPP_
 #define SOCKETEXCEPTION_HPP_
 
+#include <exception>
 #include <string>
 
 class SocketException {
@@ -10,6 +11,9 @@ public:
 
 	std::string description() {
 		return m_s;
+	}
+	const char* what() const throw() {
+		return m_s.c_str();
 	}
 
 private:

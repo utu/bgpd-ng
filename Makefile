@@ -1,16 +1,16 @@
 CC = g++
 CFLAGS = -g -I/opt/local/include -O0 -Wall
-LDFLAGS = -L/opt/local/lib -lboost_thread-mt
+LDFLAGS = -L/opt/local/lib -lboost_thread-mt -lboost_regex
 
 all: bgpd-ng
 
-bgpd-ng: main.o SocketListener.o Socket.o ServerSocket.o
+bgpd-ng: main.o SocketExample.o Socket.o ServerSocket.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-SocketListener.o: SocketListener.cpp
+SocketExample.o: SocketExample.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 Socket.o: Socket.cpp

@@ -42,6 +42,8 @@ bool Socket::create() {
 
 }
 
+/*	Bind socket to a specific port.
+ */
 bool Socket::bind(const int port) {
 
 	if (!is_valid()) {
@@ -62,6 +64,8 @@ bool Socket::bind(const int port) {
 	return true;
 }
 
+/* "Turn on" the socket.
+ */
 bool Socket::listen() const {
 	if (!is_valid()) {
 		return false;
@@ -76,6 +80,9 @@ bool Socket::listen() const {
 	return true;
 }
 
+/* Method waits for a new connection and hands out a brand
+ * new connection socket. Returns false if can't create a new socket.
+ */
 bool Socket::accept(Socket& new_Socket) const {
 	int addr_length = sizeof(m_addr);
 	new_Socket.m_sock = ::accept(m_sock, (sockaddr *) &m_addr,
