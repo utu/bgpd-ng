@@ -1,8 +1,10 @@
 #include "RouteWorker.hpp"
 #include "WorkerExeption.hpp"
-/* Public methods */
+#include "IpRoute2.hpp"
 
-RouteWorker::RouteWorker(RoutePool pool, RoutingTable table) : rpool(pool), rtable(table) {
+/* Public methods */
+RouteWorker::RouteWorker(RoutePool pool, RoutingTable table) :
+	rpool(pool), rtable(table) {
 
 }
 void RouteWorker::addRoute(std::set<BGPRoutePrefix> routeset) {
@@ -13,7 +15,6 @@ void RouteWorker::withdrawRoute(std::set<BGPRoutePrefix> routeset) {
 }
 
 /* Private methods */
-
 void RouteWorker::addRoute(BGPRoutePrefix route) {
 
 }
