@@ -4,6 +4,11 @@ You should have
 	> Boost 1.45
 	> GNU make framework (debian build-tools)
 
+== Running program
+
+See:
+$ bngd-ng --help
+
 == Installing and testing
 
 $ cd /dir/bgpd-ng

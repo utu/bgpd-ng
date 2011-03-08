@@ -22,7 +22,7 @@ void SocketExample::join() {
 }
 
 void SocketExample::run() {
-	boost::regex  expression("^omg_lol die.*");
+	boost::regex  expression("^omg lol die\n$");
 
 	std::cout << "running....\n";
 	try {
@@ -40,12 +40,13 @@ void SocketExample::run() {
 					new_sock >> data;
 
 					boost::cmatch match;
-					if (regex_match(data.c_str(), match, expression)) {
+					if (boost::regex_match(data.c_str(), match, expression)) {
 						throw(SocketException(std::string(match[0])));
 					}
 					std::cout << data;
 				}
 			} catch (SocketException& se) {
+				throw se;
 			}
 		}
 	} catch (std::exception& e) {
