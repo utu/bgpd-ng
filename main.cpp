@@ -2,6 +2,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/regex.hpp>
+#include <exception>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -43,8 +44,13 @@ int main(int argc, char* argv[]) {
 
 	// Parse command line.
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, all_cmd), vm);
-	po::notify(vm);
+	try {
+		po::store(po::parse_command_line(argc, argv, all_cmd), vm);
+		po::notify(vm);
+	} catch (std::exception e) {
+		std::cout << "Wrong command line argument. See --help for more.\n";
+		return 1;
+	}
 
 	// Parse configuration file.
 	io::stream<io::file_source> icmd_cfg(
