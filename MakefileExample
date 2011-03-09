@@ -1,0 +1,32 @@
+# This is an example makefile to build my code.
+# Boost System library is needed. 
+
+CC = g++
+CFLAGS = -g -I/usr/local/include -O0 -Wall
+LDFLAGS = -L/usr/local/lib -lboost_thread -lboost_regex -lboost_system
+
+all: bgp-fsm
+
+bgp-fsm: BGP_FSM.o BGP_Functions.o BGP_Timer.o BGP_State.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+BGP_FSM.o: BGP_FSM.cpp  BGP_FSM.hpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+	
+BGP_State.o: BGP_State.cpp BGP_FSM.hpp	
+	$(CC) $(CFLAGS) -c -o $@ $<
+	
+BGP_Functions.o: BGP_Functions.cpp BGP_Functions.hpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+BGP_Timer.o: BGP_Timer.cpp BGP_Timer.hpp
+	$(CC) $(CFLAGS) -c -o $@ $<	
+	
+
+clean:
+	rm -fr *.o
+	rm bgpd-ng
+
+# This is GNU makefile extension to notify that roughly means: 'clean' does
+# not depend on any files in order to call it.
+.PHONY: clean
