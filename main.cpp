@@ -6,9 +6,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
-namespace io = boost::iostreams;
 
 #include "SocketExample.hpp"
+#include "BGP_FSM.hpp"
 
 namespace po = boost::program_options;
 namespace io = boost::iostreams;
@@ -17,6 +17,13 @@ void test_socket(int port) {
 	SocketExample sl(port);
 	sl.start(); // kick the thread spinning
 	sl.join(); // wait for thread to finish
+}
+
+void test_fsm() {
+	BGP_FSM fsm();
+	fsm.start();
+	fsm.join();
+	fsm.inputEvent(BGPStart());
 }
 
 int main(int argc, char* argv[]) {
@@ -31,7 +38,8 @@ int main(int argc, char* argv[]) {
 	po::options_description tests("Handles for running unit tests");
 	tests.add_options()("test-socket",
 			"Run example socket server (ctrl-c to exit)")("print-routes",
-			"Print all default routes from configuration file stdout.");
+			"Print all default routes from configuration file stdout.")(
+			"test-fsm", "Test FSM functionality.");
 
 	po::options_description routes("Default routes");
 
@@ -65,13 +73,21 @@ int main(int argc, char* argv[]) {
 		std::cout << all_cmd << "\n";
 		return 1;
 	}
+
+	// Tests first
 	if (vm.count("test-socket")) {
 		if (vm.count("port")) {
 			test_socket(vm["port"].as<int> ());
 		} else {
 			std::cout << "Listening port was not set.\n";
 		}
+		return 0;
 	}
+	if (vm.count("test-fsm")) {
+		test_fsm();
+		return 0;
+	}
+
 	if (vm.count("print-routes")) {
 		std::vector<std::string>::iterator it;
 		boost::regex expression("^routes.(.*)");
