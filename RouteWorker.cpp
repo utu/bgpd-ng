@@ -3,7 +3,7 @@
 #include "IpRoute2.hpp"
 
 /* Public methods */
-RouteWorker::RouteWorker(RoutePool pool, RoutingTable table) :
+RouteWorker::RouteWorker(RoutePool &pool, RoutingTable &table) :
 	rpool(pool), rtable(table) {
 
 }
@@ -15,10 +15,10 @@ void RouteWorker::withdrawRoute(std::set<BGPRoutePrefix> routeset) {
 }
 
 /* Private methods */
-void RouteWorker::addRoute(BGPRoutePrefix route) {
+void RouteWorker::addRoute(const BGPRoutePrefix& route) {
 
 }
-void RouteWorker::withdrawRoute(BGPRoutePrefix route) {
+void RouteWorker::withdrawRoute(const BGPRoutePrefix& route) {
 
 }
 void RouteWorker::calculateTable() {

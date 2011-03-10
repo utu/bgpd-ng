@@ -8,16 +8,18 @@
 
 class RouteWorker {
 public:
-	RouteWorker(RoutePool pool, RoutingTable table);
+	RouteWorker(RoutePool &pool, RoutingTable &table);
 	void addRoute(std::set<BGPRoutePrefix> routeset);
 	void withdrawRoute(std::set<BGPRoutePrefix> routeset);
 
 private:
-	RoutePool rpool;
-	RoutingTable rtable;
+	RoutePool &rpool;
+	RoutingTable &rtable;
 
-	void addRoute(BGPRoutePrefix route);
-	void withdrawRoute(BGPRoutePrefix route);
+	void addRoute(const BGPRoutePrefix& route);
+	void withdrawRoute(const BGPRoutePrefix& route);
 	void calculateTable();
 	void updateRIB();
 };
+
+#endif
