@@ -68,12 +68,4 @@ void BGP_FSM::runIOService() {
 };
 
 // END BGP STATE MACHINE
-int main()
-{
-	BGP_FSM fsm;
-	fsm.start();
-	fsm.join();
-	fsm.inputEvent(BGPStart());
-  return 0;
-}
 

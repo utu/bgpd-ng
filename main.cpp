@@ -20,10 +20,10 @@ void test_socket(int port) {
 }
 
 void test_fsm() {
-	BGP_FSM fsm();
-	fsm.start();
-	fsm.join();
-	fsm.inputEvent(BGPStart());
+	BGP_FSM* fsm = new BGP_FSM();
+	fsm->start();
+	fsm->join();
+	fsm->inputEvent(BGPStart());
 }
 
 int main(int argc, char* argv[]) {
