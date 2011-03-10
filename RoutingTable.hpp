@@ -8,26 +8,25 @@
 #ifndef ROUTINGTABLE_HPP_
 #define ROUTINGTABLE_HPP_
 
-#include "BGPRoutePrefix"
-#include "RoutePrefix"
+#include "BGPRoutePrefix.hpp"
+#include "RoutePrefix.hpp"
 
-class RoutingTable
-{
+class RoutingTable {
 public:
 	//Init RoutingTable
 	RoutingTable();
 
 	// Delete given prefix from the table
-	void deletePrefix(RoutePrefix);
+	void deletePrefix(RoutePrefix &prefix);
 
 	// Add new prefix to the table
-	void addPrefix(RoutePrefix);
+	void addPrefix(RoutePrefix &prefix);
 
 	// Provides information about the emptiness.
 	bool isEmpty();
 
 	// Returns the position of the given prefix in the array.
-	int getRouteTableIndex(RoutePrefix);
+	int getRouteTableIndex(RoutePrefix &prefix);
 
 	/* Does a given prefix match some prefix in the table?
 	 * Match requires, that all the parameters in RoutePrefix match.
@@ -35,22 +34,20 @@ public:
 	 * ponding BGPRoutePrefix.
 	 */
 
-	BGPRoutePrefix findMatchingPrefix(RoutePrefix prefix);
+	int findMatchingPrefix(RoutePrefix &prefix);
 
 	/*
 	 * Calculates the best matches for the given route prefix.
 	 */
 
-	RoutePrefix* findBestMatches(RoutePrefix route);
-
+	RoutePrefix* findBestMatches(RoutePrefix &route);
 
 	/*
 	 *  Calculates the longest prefix match for the given route
 	 *  and the routes in the table.
 	 */
 
-	int findLongestMatchLength(RoutePrefix route);
-
+	int findLongestMatchLength(RoutePrefix &route);
 
 	/*
 	 * Given the destination BGPRoutePrefix, this function calculates the
@@ -70,18 +67,20 @@ public:
 	 * 	  there are still routes with same parameters, then choose the
 	 *	  route that is first in the list of the found prefixes.
 	 */
-	BGPRoutePrefix calcNextHop(BGPRoutePrefix);
+	int calcNextHop(RoutePrefix &prefix);
 
 	/*
 	 * Does the routing table contain a complete match with the given RoutePrefix?
 	 */
-	bool completePrefixMatch(RoutePrefix route);
+	bool completePrefixMatch(RoutePrefix &route);
 
 	void clearTable();
 
+	int countMatchingBits(RoutePrefix &route1, RoutePrefix &route2);
+
 private:
 	RoutePrefix* routeTable;
-	static int MAX_SIZE = 100;
+	static const int MAX_SIZE;
 	int last_index;
 };
 #endif /* ROUTINGTABLE_HPP_ */

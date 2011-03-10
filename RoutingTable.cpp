@@ -6,137 +6,114 @@
  */
 
 #include "RoutingTable.hpp"
-#include "BGPRoutePrefix"
-#include "BGPRoute"
+#include "RoutingTableEmptyExecption.hpp"
 
-RoutingTable::RoutingTable()
+const int RoutingTable::MAX_SIZE = 100;
 
-{
-	RoutingTable::routeTable = NULL;
-	RoutingTable::routeTable = new RoutePrefix[RoutingTable::MAX_SIZE];
-	RoutingTable::last_index = 0;
+RoutingTable::RoutingTable() :
+	last_index(0) {
+	routeTable = new RoutePrefix[MAX_SIZE];
 }
 
-RoutingTable::clearTable()
-{
-	delete [] RoutingTable::routeTable;
-	RoutingTable::routeTable = NULL;
-
-	RoutingTable::last_index = 0;
+void RoutingTable::clearTable() {
+	delete[] routeTable;
+	last_index = 0;
 }
 
-bool RoutingTable::isEmpty()
-{
-	if(RoutingTable::last_index ==0){
+bool RoutingTable::isEmpty() {
+	if (RoutingTable::last_index == 0) {
 		return true;
 	}
 
-	else return false;
+	else
+		return false;
 }
 
-int RoutingTable::getRouteTableIndex(RoutePrefix prefix)
-{
+int RoutingTable::getRouteTableIndex(RoutePrefix &prefix) {
 	int i = 0;
 
-	while ( i <= RoutingTable::last_index)
-	{
-		if(prefix.matches(RoutingTable::routeTable[i]))
-		{
+	while (i <= last_index) {
+		if (prefix.matches(routeTable[i])) {
 			return i;
 		}
 
-		else ++i;
+		else
+			++i;
 	}
 
 	return i;
 }
 
-RoutingTable::deletePrefix(RoutePrefix prefix)
-{
-	if(not RoutingTable::isEmpty() )
-
-	{
-		int index = RoutingTable::getRouteTableIndex(prefix);
+void RoutingTable::deletePrefix(RoutePrefix &prefix) {
+	if (not isEmpty()) {
+		int index = getRouteTableIndex(prefix);
 
 		// index > 0 ==> There is a match, so deletion can be made.
-		if(index > 0)
-			{
+		if (index > 0) {
 
-			RoutingTable::routeTable[index] = NULL;
-
-			for(int i = index; i < RoutingTable::last_index; ++i)
-					{
-						RoutingTable::routeTable[i] = RoutingTable::routeTable[i+1];
-					}
-
-			RoutingTable::last_index = RoutingTable::last_index - 1;
-
+			for (int i = index; i < last_index; ++i) {
+				routeTable[i] = routeTable[i + 1];
 			}
-		else throw RoutingTableEmptyException();
+
+			last_index = last_index - 1;
+
+		} else {
+			throw new RoutingTableEmptyException("Le fu.");
+		}
 	}
 
 }
 
-void RoutingTable::addPrefix(RoutePrefix prefix)
-{
-	RoutingTable::routeTable[last_index + 1] = prefix;
-	RoutingTable::last_index = last_index + 1;
+void RoutingTable::addPrefix(RoutePrefix &prefix) {
+	routeTable[last_index + 1] = prefix;
+	last_index = last_index + 1;
 }
 
-BGPRoutePrefix RoutingTable::findMatchingPrefix(RoutePrefix prefix)
-{
+int RoutingTable::findMatchingPrefix(RoutePrefix &prefix) {
 	int i = 0;
 
-	while(i <= RoutingTable::last_index)
-		{
-			if(RoutingTable::routeTable[i].matches(route))
-			{
-				return i;
-			}
-
-			else ++i;
-		}
+//FIXME: can't understand this. there's no route declared here
+//	while (i <= last_index) {
+//		if (routeTable[i].matches(route)) {
+//			return i;
+//		}
+//
+//		else
+//			++i;
+//	}
 
 	return 0;
-
-
 }
 
-bool RoutingTable::completePrefixMatch(RoutePrefix route)
-{
-	if(RoutingTable::findMatchingPrefix(route)>0)
-	{
+bool RoutingTable::completePrefixMatch(RoutePrefix &route) {
+	if (findMatchingPrefix(route) > 0) {
 		return true;
 	}
 
-	else return false;
+	else
+		return false;
 }
 
-int findLongestMatchLength(RoutePrefix route)
-{
+int RoutingTable::findLongestMatchLength(RoutePrefix &route) {
 	int longestMatch = 0;
 
-	for(int i = 0; i <= RoutingTable::last_index; ++i)
-	{
-		if( countMatchingBits(RoutingTable::routeTable[i],route) > longestMatch)
-		{
-			longestMatch = RoutePrefix::countMatchingBits(RoutingTable::routeTable[i],route);
+	for (int i = 0; i <= last_index; ++i) {
+		if (countMatchingBits(routeTable[i], route) > longestMatch) {
+			longestMatch = countMatchingBits(routeTable[i], route);
 		}
 	}
 
 	return longestMatch;
 }
 
-RoutePrefix* RoutingTable::findBestMatches(RoutePrefix route)
-{
+RoutePrefix* RoutingTable::findBestMatches(RoutePrefix &route) {
 
-	RoutePrefix* helpTable = NULL;
+	RoutePrefix* helpTable;
 
-	for(int i =0; i <=RoutingTable::last_index; ++i)
-	{
-		if(RoutingTable::countMatchingBits(RoutingTable::routeTable[i],route) == RoutingTable::findLongestMatchLength(route))
-		{
-			helpTable[i] = RoutingTable::routeTable[i];
+	for (int i = 0; i <= last_index; ++i) {
+		if (countMatchingBits(routeTable[i], route) == findLongestMatchLength(
+				route)) {
+			helpTable[i] = routeTable[i];
 		}
 	}
 
@@ -144,19 +121,21 @@ RoutePrefix* RoutingTable::findBestMatches(RoutePrefix route)
 
 }
 
-BGPRoutePrefix RoutingTable::calcNextHop(BGPRoutePrefix route)
-{
+int RoutingTable::calcNextHop(RoutePrefix &route) {
 	RoutePrefix* nextRouteCandidates = NULL;
 
 	//Criteria 1: complete match found.
-	if(RoutingTable::completePrefixMatch(route))
-	{
-		return RoutingTable::findMatchingPrefix(route);
+	if (completePrefixMatch(route)) {
+		return findMatchingPrefix(route);
 	}
 
 	// Now do the decision due to the second and third criteria.
 
-	nextRouteCandidates = RoutingTable::findBestMatches(route);
+	nextRouteCandidates = findBestMatches(route);
 
+}
 
+int RoutingTable::countMatchingBits(RoutePrefix &route1, RoutePrefix &route2) {
+	// FIXME: dummy
+	return 0;
 }
