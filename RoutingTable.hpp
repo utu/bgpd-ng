@@ -8,46 +8,65 @@
 #ifndef ROUTINGTABLE_HPP_
 #define ROUTINGTABLE_HPP_
 
-#include "BGPRoutePrefix.hpp"
-#include "RoutePrefix.hpp"
+#include "BGPRoutePrefix.cpp"
+#include "RoutePrefix.cpp"
 
-class RoutingTable {
+class RoutingTable
+{
 public:
 	//Init RoutingTable
 	RoutingTable();
 
+
 	// Delete given prefix from the table
 	void deletePrefix(RoutePrefix &prefix);
+
 
 	// Add new prefix to the table
 	void addPrefix(RoutePrefix &prefix);
 
+
 	// Provides information about the emptiness.
 	bool isEmpty();
 
+
 	// Returns the position of the given prefix in the array.
 	int getRouteTableIndex(RoutePrefix &prefix);
+
 
 	/* Does a given prefix match some prefix in the table?
 	 * Match requires, that all the parameters in RoutePrefix match.
 	 * If a complete match is found, the function returns the corres-
 	 * ponding BGPRoutePrefix.
 	 */
+	BGPRoutePrefix findMatchingPrefix(RoutePrefix &prefix);
 
-	int findMatchingPrefix(RoutePrefix &prefix);
 
 	/*
 	 * Calculates the best matches for the given route prefix.
 	 */
-
 	RoutePrefix* findBestMatches(RoutePrefix &route);
+
 
 	/*
 	 *  Calculates the longest prefix match for the given route
 	 *  and the routes in the table.
 	 */
-
 	int findLongestMatchLength(RoutePrefix &route);
+
+
+	/*
+	 * Searches for the shortest AS_Path and returns the length of it.
+	 */
+	int findShortestASPathLength();
+
+
+	/*
+	 * Filters all such paths from the given route list that
+	 * have the shortest AS_PATH length
+	 */
+	RoutePrefix* filterShortestASPaths(RoutePrefix &routes);
+
 
 	/*
 	 * Given the destination BGPRoutePrefix, this function calculates the
@@ -67,20 +86,21 @@ public:
 	 * 	  there are still routes with same parameters, then choose the
 	 *	  route that is first in the list of the found prefixes.
 	 */
-	int calcNextHop(RoutePrefix &prefix);
+	BGPRoutePrefix calcNextHop(RoutePrefix* DestAddr);
 
 	/*
 	 * Does the routing table contain a complete match with the given RoutePrefix?
 	 */
 	bool completePrefixMatch(RoutePrefix &route);
 
+	/*
+	 * Clears the whole routing table.
+	 */
 	void clearTable();
-
-	int countMatchingBits(RoutePrefix &route1, RoutePrefix &route2);
 
 private:
 	RoutePrefix* routeTable;
-	static const int MAX_SIZE;
+	static int MAX_SIZE;
 	int last_index;
 };
 #endif /* ROUTINGTABLE_HPP_ */

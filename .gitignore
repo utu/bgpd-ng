@@ -5,3 +5,4 @@ Default/
 *.o
 bgpd-ng
 .externalToolBuilders/
+.checkstyle
