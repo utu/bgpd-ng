@@ -8,8 +8,8 @@
 #ifndef ROUTINGTABLE_HPP_
 #define ROUTINGTABLE_HPP_
 
-#include "BGPRoutePrefix.cpp"
-#include "RoutePrefix.cpp"
+#include "BGPRoutePrefix.hpp"
+#include "RoutePrefix.hpp"
 
 class RoutingTable
 {
@@ -100,7 +100,7 @@ public:
 
 private:
 	RoutePrefix* routeTable;
-	static int MAX_SIZE;
+	static const int MAX_SIZE;
 	int last_index;
 };
 #endif /* ROUTINGTABLE_HPP_ */

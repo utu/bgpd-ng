@@ -6,6 +6,7 @@
  */
 
 #include "RoutingTable.hpp"
+#include "RoutingTableException.hpp"
 #include "RoutingTableEmptyExecption.hpp"
 
 const int RoutingTable::MAX_SIZE = 100;
@@ -44,7 +45,7 @@ int RoutingTable::getRouteTableIndex(RoutePrefix &prefix) {
 	return i;
 }
 
-RoutingTable::deletePrefix(RoutePrefix &prefix) {
+void RoutingTable::deletePrefix(RoutePrefix &prefix) {
 	if (not isEmpty())
 
 	{
@@ -52,8 +53,6 @@ RoutingTable::deletePrefix(RoutePrefix &prefix) {
 
 		// index > 0 ==> There is a match, so deletion can be made.
 		if (index > 0) {
-
-			routeTable[index] = NULL;
 
 			for (int i = index; i < last_index; ++i) {
 				routeTable[i] = routeTable[i + 1];
@@ -79,26 +78,29 @@ void RoutingTable::addPrefix(RoutePrefix &prefix) {
 }
 
 bool RoutingTable::completePrefixMatch(RoutePrefix &route) {
-	if (countMatchingBits(route, routeTable[i]) == 32) {
-		return true;
-	}
 
-	else
+	// FIXME: Could you clarify this part? What index i should traverse through?
+//	if (countMatchingBits(route, routeTable[i]) == 32) {
+//		return true;
+//	}
+//
+//	else
 		return false;
 }
 
-int findLongestMatchLength(RoutePrefix &route) {
+int RoutingTable::findLongestMatchLength(RoutePrefix &route) {
 	int longestMatch = 0;
 
-	for (int i = 0; i <= last_index; ++i) {
-		if (!isEmpty()) {
-			longestMatch = RoutePrefix::countMatchingBits(routeTable[i], route);
-		}
-
-		else
-			throw RoutingTableException(
-					"Cannot calculate longest match length. Routing table is empty.");
-	}
+	// FIXME: C++ is a bit more tricky. One should use STL containers in here...
+//	for (int i = 0; i <= routeTable; ++i) {
+//		if (!isEmpty()) {
+//			longestMatch = RoutePrefix::countMatchingBits(routeTable[i], route);
+//		}
+//
+//		else
+//			throw RoutingTableException(
+//					"Cannot calculate longest match length. Routing table is empty.");
+//	}
 
 	return longestMatch;
 }

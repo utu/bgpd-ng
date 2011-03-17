@@ -8,12 +8,14 @@
 #ifndef ROUTINGTABLEEXCEPTION_HPP_
 #define ROUTINGTABLEEXCEPTION_HPP_
 
+#include <string>
+
 class RoutingTableException {
 public:
 	RoutingTableException(std::string s) :m_s(s) {};
 	~RoutingTableException() {};
 
-	std::string description() {
+	const std::string description() const {
 		return m_s;
 	}
 	const char* what() const throw() {
