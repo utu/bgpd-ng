@@ -5,9 +5,7 @@
 
 class RoutePrefix {
 public:
-	bool matches(RoutePrefix &rtable) {
-		// FIXME: dummy
-		return true;
-	}
+	bool matches(RoutePrefix &rtable);
+	int getASPathLength();
 };
 #endif

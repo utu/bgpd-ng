@@ -8,6 +8,7 @@
 #ifndef ROUTINGTABLE_HPP_
 #define ROUTINGTABLE_HPP_
 
+#include <list>
 #include "BGPRoutePrefix.hpp"
 #include "RoutePrefix.hpp"
 
@@ -86,7 +87,7 @@ public:
 	 * 	  there are still routes with same parameters, then choose the
 	 *	  route that is first in the list of the found prefixes.
 	 */
-	BGPRoutePrefix calcNextHop(RoutePrefix* DestAddr);
+	BGPRoutePrefix calcNextHop(RoutePrefix& DestAddr);
 
 	/*
 	 * Does the routing table contain a complete match with the given RoutePrefix?
@@ -99,7 +100,7 @@ public:
 	void clearTable();
 
 private:
-	RoutePrefix* routeTable;
+	List<RoutePrefix*> routeTable;
 	static const int MAX_SIZE;
 	int last_index;
 };

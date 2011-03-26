@@ -79,28 +79,26 @@ void RoutingTable::addPrefix(RoutePrefix &prefix) {
 
 bool RoutingTable::completePrefixMatch(RoutePrefix &route) {
 
-	// FIXME: Could you clarify this part? What index i should traverse through?
-//	if (countMatchingBits(route, routeTable[i]) == 32) {
-//		return true;
-//	}
-//
-//	else
-		return false;
+	if (countMatchingBits(route, routeTable[i]) == 32) {
+		return true;
+	}
+
+	return false;
 }
 
 int RoutingTable::findLongestMatchLength(RoutePrefix &route) {
 	int longestMatch = 0;
 
-	// FIXME: C++ is a bit more tricky. One should use STL containers in here...
-//	for (int i = 0; i <= routeTable; ++i) {
-//		if (!isEmpty()) {
-//			longestMatch = RoutePrefix::countMatchingBits(routeTable[i], route);
-//		}
-//
-//		else
-//			throw RoutingTableException(
-//					"Cannot calculate longest match length. Routing table is empty.");
-//	}
+	// FIXME: C++ is a bit more tricky. One should use STL containers in here. Size of table is how much it consumes memory.
+	for (int i = 0; i <= routeTable; ++i) {
+		if (!isEmpty()) {
+			longestMatch = RoutePrefix::countMatchingBits(routeTable[i], route);
+		}
+
+		else
+			throw RoutingTableException(
+					"Cannot calculate longest match length. Routing table is empty.");
+	}
 
 	return longestMatch;
 }
@@ -144,7 +142,7 @@ RoutePrefix* RoutingTable::filterShortestASPaths(RoutePrefix &routes)
 {
 
 	int shortest = findShortestASPathLength();
-	RoutePrexix* listOfShortest = NULL;
+	RoutePrexix* listOfShortest[30];
 
 	int i = 0;
 	int j = 0;
@@ -152,7 +150,7 @@ RoutePrefix* RoutingTable::filterShortestASPaths(RoutePrefix &routes)
 	while (i < last_index) {
 
 		if (routes[i].getASPathLength() == shortest) {
-			listofShortest[j] = routes[i];
+			listOfShortest[j] = routes[i];
 			++j;
 		}
 		++i;
