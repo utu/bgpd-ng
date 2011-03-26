@@ -10,6 +10,9 @@ all: bgpd-ng
 
 bgpd-ng: BGP_FSM.o BGP_Functions.o BGP_State.o BGP_Timer.o IpRoute2.o RouteWorker.o RoutingTable.o ServerSocket.o Socket.o SocketExample.o main.o
 	$(CC) $(LDFLAGS) -o $@ $^
+	
+test-target: BGP_FSM.o BGP_Functions.o BGP_State.o BGP_Timer.o IpRoute2.o RouteWorker.o ServerSocket.o Socket.o SocketExample.o main.o
+	$(CC) $(LDFLAGS) -o $@ $^
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<	
