@@ -7,5 +7,7 @@ class RoutePrefix {
 public:
 	bool matches(RoutePrefix &rtable);
 	int getASPathLength();
+	bool isStatic();
+	static int countMatchingBits(RoutePrefix &route1, RoutePrefix &route2);
 };
 #endif

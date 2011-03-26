@@ -31,10 +31,6 @@ public:
 	bool isEmpty();
 
 
-	// Returns the position of the given prefix in the array.
-	int getRouteTableIndex(RoutePrefix &prefix);
-
-
 	/* Does a given prefix match some prefix in the table?
 	 * Match requires, that all the parameters in RoutePrefix match.
 	 * If a complete match is found, the function returns the corres-
@@ -46,7 +42,7 @@ public:
 	/*
 	 * Calculates the best matches for the given route prefix.
 	 */
-	RoutePrefix* findBestMatches(RoutePrefix &route);
+	std::list<RoutePrefix>* findBestMatches(RoutePrefix &route);
 
 
 	/*
@@ -66,7 +62,7 @@ public:
 	 * Filters all such paths from the given route list that
 	 * have the shortest AS_PATH length
 	 */
-	RoutePrefix* filterShortestASPaths(RoutePrefix &routes);
+	std::list<RoutePrefix>* filterShortestASPaths(RoutePrefix &routes);
 
 
 	/*
@@ -87,7 +83,7 @@ public:
 	 * 	  there are still routes with same parameters, then choose the
 	 *	  route that is first in the list of the found prefixes.
 	 */
-	BGPRoutePrefix calcNextHop(RoutePrefix &DestAddr);
+	BGPRoutePrefix* calcNextHop(RoutePrefix &DestAddr);
 
 	/*
 	 * Does the routing table contain a complete match with the given RoutePrefix?
@@ -101,6 +97,5 @@ public:
 
 private:
 	std::list<RoutePrefix> routeTable;
-	std::list<RoutePrefix>::iterator routeIt;
 };
 #endif /* ROUTINGTABLE_HPP_ */

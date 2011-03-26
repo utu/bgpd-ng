@@ -5,178 +5,130 @@
  *      Author: noora
  */
 
+#include <list>
 #include "RoutingTable.hpp"
 #include "RoutingTableException.hpp"
 #include "RoutingTableEmptyExecption.hpp"
 
-const int RoutingTable::MAX_SIZE = 100;
-
-RoutingTable::RoutingTable() :
-	last_index(0) {
+RoutingTable::RoutingTable() {
 }
 
 void RoutingTable::clearTable() {
 	routeTable.clear();
+
 }
 
 bool RoutingTable::isEmpty() {
-	if (last_index == 0) {
-		return true;
-	}
-
-	else
-		return false;
-}
-
-int RoutingTable::getRouteTableIndex(RoutePrefix &prefix) {
-	int i = 0;
-
-	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
-		if (prefix.matches(*routeIt)) {
-			return i;
-		}
-
-		else
-			++i;
-	}
-
-	return i;
+	return routeTable.empty();
 }
 
 void RoutingTable::deletePrefix(RoutePrefix &prefix) {
-	if (not isEmpty())
-
-	{
-		int index = getRouteTableIndex(prefix);
-
-		// index > 0 ==> There is a match, so deletion can be made.
-		if (index > 0) {
-
-			for (int i = index; i < last_index; ++i) {
-				routeTable[i] = routeTable[i + 1];
-			}
-
-			last_index = last_index - 1;
-
-		}
-
-		else
-			throw RoutingTableException(
-					"Can't delete the given route. The route does not exist in the table.");
-	}
-
-	else
+	if (not isEmpty()) {
+		routeTable.remove(prefix);
+	} else {
 		throw RoutingTableException(
-				"Can't delete the given route. The routing table is already empty.");
+				"Can't delete the given route. The route does not exist in the table.");
+	}
 }
 
 void RoutingTable::addPrefix(RoutePrefix &prefix) {
-	routeTable[last_index + 1] = prefix;
-	last_index = last_index + 1;
-}
-
-bool RoutingTable::completePrefixMatch(RoutePrefix &route) {
-
-	if (countMatchingBits(route, routeTable[i]) == 32) {
-		return true;
-	}
-
-	return false;
+	routeTable.push_back(prefix);
 }
 
 int RoutingTable::findLongestMatchLength(RoutePrefix &route) {
 	int longestMatch = 0;
+	std::list<RoutePrefix>::iterator routeIt;
 
 	// FIXME: C++ is a bit more tricky. One should use STL containers in here. Size of table is how much it consumes memory.
-	for (int i = 0; i <= routeTable; ++i) {
-		if (!isEmpty()) {
-			longestMatch = RoutePrefix::countMatchingBits(routeTable[i], route);
+	if (!isEmpty()) {
+		for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+			longestMatch = RoutePrefix::countMatchingBits(*routeIt, route);
 		}
-
-		else
-			throw RoutingTableException(
-					"Cannot calculate longest match length. Routing table is empty.");
+	} else {
+		throw RoutingTableException(
+				"Cannot calculate longest match length. Routing table is empty.");
 	}
-
 	return longestMatch;
 }
 
-RoutePrefix* RoutingTable::findBestMatches(RoutePrefix &route) {
+std::list<RoutePrefix>* RoutingTable::findBestMatches(RoutePrefix &route) {
 
-	RoutePrefix* helpTable = NULL;
+	std::list<RoutePrefix> *helpTable = new std::list<RoutePrefix>();
+	std::list<RoutePrefix>::iterator routeIt;
 
-	for (int i = 0; i <= last_index; ++i) {
-		if (countMatchingBits(routeTable[i], route) == findLongestMatchLength(
-				route)) {
-			helpTable[i] = routeTable[i];
+	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+
+		if (RoutePrefix::countMatchingBits(*routeIt, route)
+				== findLongestMatchLength(route)) {
+			helpTable->push_back(*routeIt);
 		}
 	}
-
 	return helpTable;
 
 }
 
 int RoutingTable::findShortestASPathLength() {
 	// Suppose that the shortest is in the first position.
-	int shortest = routeTable[0].getASPathLength();
-	int i = 1;
+	RoutePrefix tmp = *routeTable.begin();
+	int shortest = tmp.getASPathLength();
+
+	std::list<RoutePrefix>::iterator routeIt;
 
 	//Check whether there exist any shorter ones.
-	while (i < last_index) {
-
-		if (shortest > routeTable[i].getASPathLength()) {
-			shortest = routeTable[i].getASPathLength();
+	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+		if (shortest > routeIt->getASPathLength()) {
+			shortest = routeIt->getASPathLength();
 		}
-
-		++i;
-
 	}
 
 	return shortest;
 }
 
-RoutePrefix* RoutingTable::filterShortestASPaths(RoutePrefix &routes)
-{
+std::list<RoutePrefix>* RoutingTable::filterShortestASPaths(RoutePrefix &routes) {
 
 	int shortest = findShortestASPathLength();
-	RoutePrexix* listOfShortest[30];
+	std::list<RoutePrefix> *los = new std::list<RoutePrefix>();
+	std::list<RoutePrefix>::iterator routeIt;
 
-	int i = 0;
-	int j = 0;
-
-	while (i < last_index) {
-
-		if (routes[i].getASPathLength() == shortest) {
-			listOfShortest[j] = routes
-			++j;
+	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+		if (routeIt->getASPathLength() == shortest) {
+			los->push_back(*routeIt);
 		}
-		++i;
 	}
-
-	return listOfShortest;
+	return los;
 }
 
-BGPRoutePrefix RoutingTable::calcNextHop(RoutePrefix &route) {
+bool RoutingTable::completePrefixMatch(RoutePrefix &route) {
+	std::list<RoutePrefix>::iterator routeIt;
 
-	RoutePrefix* nextRouteCandidates = NULL;
-
-	//Criteria 1: complete match found.
-	if (completePrefixMatch(route)) {
-		return findMatchingPrefix(route);
+	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+		if (routeIt->matches(route)) {
+			return true;
+		}
 	}
 
-	else {
+	return false;
+}
 
-		nextRouteCandidates = filterShortestASPaths(nextRouteCandidates);
+BGPRoutePrefix * RoutingTable::calcNextHop(RoutePrefix &route) {
+
+	std::list<RoutePrefix> * best;
+	std::list<RoutePrefix> * shorter;
+
+	//Criteria 1: complete match found.
+
+	if (completePrefixMatch(route)) {
+		return findMatchingPrefix(route);
+	} else {
 
 		/*
 		 * Now do the decision due to the second and third criteria.
-		 * First find the best matching prexises. There is at least one
+		 * First find the best matching prefixes. There is at least one
 		 * such route, since we first calculate the length of the best
 		 * match and after it we filter the routes with the same prefix.
 		 */
 
-		nextRouteCandidates = findBestMatches(route);
+		best = findBestMatches(route);
 
 		/*
 		 * Criterion 2: Filter the routes with shortest AS_PATH parameter
@@ -187,20 +139,22 @@ BGPRoutePrefix RoutingTable::calcNextHop(RoutePrefix &route) {
 		 */
 
 		//There is only one item in the list.
-		if (nextRouteCandidates[1] == NULL) {
-			return nextRouteCandidates[0];
+		if (best->size() == 1) {
+			return *best->begin();
 		}
 
 		// There are more items --> selection by criterion 3!
 		else {
+			shorter = filterShortestASPaths(*best);
+
 			int i = 0;
 
 			// Return the static route, if one exists.
-			while (nextRouteCandidates[i] != NULL) {
-				if (nextRouteCandidates[i].isStatic()) {
-					return nextRouteCandidates[i];
+			while (shoreter.length() > 0) {
+				if (shorter->isStatic()) {
+					return *shorer;
 				}
-				++i;
+				shorter++;
 			}
 
 			/*
@@ -209,27 +163,8 @@ BGPRoutePrefix RoutingTable::calcNextHop(RoutePrefix &route) {
 			 * of these members is compared, the first item of nextRouteCandidates[] will be the one that
 			 * have been added to the routeList[] first (i.e. before the latter members).
 			 */
-			return nextRouteCandidates[0];
+			return shorter.begin();
 		}
 	}
-}
-
-int RoutingTable::countMatchingBits(RoutePrefix &route1, RoutePrefix &route2) {
-
-	int counter = 0;
-
-	unsigned long int route1Bit = ConvertToBits(route1);
-	unsigned long int route2Bit = ConvertToBits(route2);
-
-	unsigned long int routesXorred = route1Bit ^ Route2Bit;
-
-	while (routeXorred) {
-
-		++counter;
-
-		routeXorred = (routeXorred - 1) & routeXorred;
-	}
-
-	return counter;
 }
 
