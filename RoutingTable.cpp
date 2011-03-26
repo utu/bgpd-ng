@@ -16,8 +16,7 @@ RoutingTable::RoutingTable() :
 }
 
 void RoutingTable::clearTable() {
-	delete[] routeTable;
-	last_index = 0;
+	routeTable.clear();
 }
 
 bool RoutingTable::isEmpty() {
@@ -32,8 +31,8 @@ bool RoutingTable::isEmpty() {
 int RoutingTable::getRouteTableIndex(RoutePrefix &prefix) {
 	int i = 0;
 
-	while (i <= last_index) {
-		if (prefix.matches(routeTable[i])) {
+	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
+		if (prefix.matches(*routeIt)) {
 			return i;
 		}
 

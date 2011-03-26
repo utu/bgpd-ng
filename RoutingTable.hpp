@@ -102,7 +102,5 @@ public:
 private:
 	std::list<RoutePrefix> routeTable;
 	std::list<RoutePrefix>::iterator routeIt;
-	static const int MAX_SIZE;
-	int last_index;
 };
 #endif /* ROUTINGTABLE_HPP_ */
