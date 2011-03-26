@@ -2,12 +2,13 @@
 #define BGPROUTEPREFIX_HPP_
 
 #include <string>
+#include <list>
 #include "RoutePrefix.hpp"
 
 class BGPRoutePrefix : RoutePrefix {
 
 private:
 	BGPRoutePrefix* nextHop;
-	List<std::string> asPath;
+	std::list<std::string> asPath;
 };
 #endif
