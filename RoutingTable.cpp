@@ -13,7 +13,6 @@ const int RoutingTable::MAX_SIZE = 100;
 
 RoutingTable::RoutingTable() :
 	last_index(0) {
-	routeTable = new RoutePrefix[MAX_SIZE];
 }
 
 void RoutingTable::clearTable() {
@@ -138,7 +137,6 @@ int RoutingTable::findShortestASPathLength() {
 }
 
 RoutePrefix* RoutingTable::filterShortestASPaths(RoutePrefix &routes)
-
 {
 
 	int shortest = findShortestASPathLength();
@@ -150,7 +148,7 @@ RoutePrefix* RoutingTable::filterShortestASPaths(RoutePrefix &routes)
 	while (i < last_index) {
 
 		if (routes[i].getASPathLength() == shortest) {
-			listOfShortest[j] = routes[i];
+			listOfShortest[j] = routes
 			++j;
 		}
 		++i;

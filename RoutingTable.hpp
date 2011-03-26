@@ -87,7 +87,7 @@ public:
 	 * 	  there are still routes with same parameters, then choose the
 	 *	  route that is first in the list of the found prefixes.
 	 */
-	BGPRoutePrefix calcNextHop(RoutePrefix& DestAddr);
+	BGPRoutePrefix calcNextHop(RoutePrefix &DestAddr);
 
 	/*
 	 * Does the routing table contain a complete match with the given RoutePrefix?
@@ -100,7 +100,8 @@ public:
 	void clearTable();
 
 private:
-	List<RoutePrefix*> routeTable;
+	std::list<RoutePrefix> routeTable;
+	std::list<RoutePrefix>::iterator routeIt;
 	static const int MAX_SIZE;
 	int last_index;
 };
