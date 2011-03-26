@@ -1,5 +1,8 @@
 CC = g++
+
 CFLAGS = -g -I/opt/local/include -O0 -Wall
+CFLAGS += -IC:/MinGW/lib/boost_1_46_1 # Windows path for Boost
+
 LDFLAGS = -L/opt/local/lib -lboost_thread-mt -lboost_regex -lboost_program_options -lboost_system
 OBJECTS=$(SOURCES:.cpp=.o)
 
