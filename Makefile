@@ -1,7 +1,6 @@
 CC = g++
 
 CFLAGS = -g -I/opt/local/include -Iinclude -O0 -Wall
-CFLAGS += -IC:/MinGW/lib/boost_1_46_1
 
 LDFLAGS = -L/opt/local/lib -lboost_thread-mt -lboost_regex -lboost_program_options -lboost_system
 
@@ -27,8 +26,9 @@ all: checkdirs bgpd-ng
 
 bgpd-ng: $(OBJ)
 	$(ld-command)
+	@echo BUILD SUCCEED
 	
-messages: build/messages/BGPMessage.o
+messages: checkdirs build/messages/BGPMessage.o
 	
 checkdirs: 
 	@mkdir -p $(BUILD_DIR)

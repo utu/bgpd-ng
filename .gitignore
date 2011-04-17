@@ -6,3 +6,4 @@ Default/
 bgpd-ng
 .externalToolBuilders/
 .checkstyle
+/build

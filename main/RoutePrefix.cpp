@@ -12,14 +12,10 @@ int RoutePrefix::getASPathLength() {
 bool RoutePrefix::isStatic() {
 	return true;
 }
-static int RoutePrefix::countMatchingBits(RoutePrefix &route1, RoutePrefix &route2) {
+int RoutePrefix::countMatchingBits(const RoutePrefix &route) {
 	return 0;
 }
 
 bool RoutePrefix::operator==(const RoutePrefix &comp) {
 	return true;
-}
-
-bool RoutePrefix::operator!=(const RoutePrefix &comp) {
-	return !(comp == this);
 }
