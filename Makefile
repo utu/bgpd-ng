@@ -1,27 +1,42 @@
 CC = g++
 
 CFLAGS = -g -I/opt/local/include -Iinclude -O0 -Wall
-CFLAGS += -IC:/MinGW/lib/boost_1_46_1 # Windows path for Boost
+CFLAGS += -IC:/MinGW/lib/boost_1_46_1
 
 LDFLAGS = -L/opt/local/lib -lboost_thread-mt -lboost_regex -lboost_program_options -lboost_system
-OBJECTS=$(SOURCES:.cpp=.o)
 
-all: bgpd-ng 
+SRC_DIR	  = main messages
+BUILD_DIR := $(addprefix build/,$(SRC_DIR))
 
-bgpd-ng: BGP_FSM.o BGP_Functions.o BGP_State.o BGP_Timer.o IpRoute2.o RouteWorker.o RoutingTable.o ServerSocket.o Socket.o SocketExample.o main.o
+SRC       := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
+OBJ       := $(patsubst %.cpp,build/%.o,$(SRC))
+INCLUDES  := $(addprefix -I,$(SRC_DIR))
+
+define ld-command
 	$(CC) $(LDFLAGS) -o $@ $^
+endef
+
+define cc-command
+	$(CC) $(CFLAGS) -c $1 -o $@
+endef
+
+%.o:
+	$(call cc-command, $(patsubst build/%.o,%.cpp,$@))
+
+all: checkdirs bgpd-ng 
+
+bgpd-ng: $(OBJ)
+	$(ld-command)
 	
-test-target: BGP_FSM.o BGP_Functions.o BGP_State.o BGP_Timer.o IpRoute2.o RouteWorker.o ServerSocket.o Socket.o SocketExample.o main.o
-	$(CC) $(LDFLAGS) -o $@ $^
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<	
+messages: build/messages/BGPMessage.o
+	
+checkdirs: 
+	@mkdir -p $(BUILD_DIR)
 
 clean:
-	rm -fr *.o
-	rm bgpd-ng
+	@rm -rf $(BUILD_DIR)
 
 # This is GNU makefile extension to notify that roughly means: 'clean' does
 # not depend on any files in order to call it.
-.PHONY: clean
+.PHONY: clean checkdirs all
 

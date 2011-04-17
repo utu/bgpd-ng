@@ -20,7 +20,7 @@ public:
 
 
 	// Delete given prefix from the table
-	void deletePrefix(RoutePrefix &prefix);
+	void deletePrefix(const RoutePrefix &prefix);
 
 
 	// Add new prefix to the table

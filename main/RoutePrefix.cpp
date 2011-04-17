@@ -15,3 +15,11 @@ bool RoutePrefix::isStatic() {
 static int RoutePrefix::countMatchingBits(RoutePrefix &route1, RoutePrefix &route2) {
 	return 0;
 }
+
+bool RoutePrefix::operator==(const RoutePrefix &comp) {
+	return true;
+}
+
+bool RoutePrefix::operator!=(const RoutePrefix &comp) {
+	return !(comp == this);
+}

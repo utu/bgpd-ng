@@ -9,5 +9,7 @@ public:
 	int getASPathLength();
 	bool isStatic();
 	static int countMatchingBits(RoutePrefix &route1, RoutePrefix &route2);
+	bool operator==(const RoutePrefix &comp);
+	bool operator!=(const RoutePrefix &comp);
 };
 #endif
