@@ -1,10 +1,13 @@
-#include "BGPMessage.hpp"
+#include "message/BGPMessage.hpp"
 
-BGPMessage::BGPMessage(const char* message) {
+BGPMessage::BGPMessage() {
 
 }
 
-int BGPMessage::messageType() {
+void BGPMessage::readMessage(const unsigned char *message) {
+
+}
+
+const __uint8_t BGPMessage::messageType() {
 	return 0;
 }
-

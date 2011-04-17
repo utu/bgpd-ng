@@ -3,8 +3,11 @@
 #include "IpRoute2.hpp"
 
 /* Public methods */
-RouteWorker::RouteWorker(RoutePool &pool, RoutingTable &table) :
-	rpool(pool), rtable(table) {
+RouteWorker::RouteWorker(RoutePool &pool) :
+	rpool(pool) {
+
+}
+RouteWorker::~RouteWorker() {
 
 }
 void RouteWorker::addRoute(std::set<BGPRoutePrefix> routeset) {

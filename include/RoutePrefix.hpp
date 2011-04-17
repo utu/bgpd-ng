@@ -1,15 +1,13 @@
 #ifndef ROUTEPREFIX_HPP_
 #define ROUTEPREFIX_HPP_
 
-#include "RoutePrefix.hpp";
+#include <inttypes.h>
+#include "Prefix.hpp"
 
-class RoutePrefix {
+class RoutePrefix: public Prefix {
 public:
-	bool matches(RoutePrefix &rtable);
-	int getASPathLength();
-	bool isStatic();
-	int countMatchingBits(const RoutePrefix &route);
-	bool operator==(const RoutePrefix &comp);
+	const bool matches(RoutePrefix &rtable);
+	const bool isStatic();
 };
 
 #endif

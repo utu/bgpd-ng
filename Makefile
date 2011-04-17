@@ -22,7 +22,7 @@ endef
 %.o:
 	$(call cc-command, $(patsubst build/%.o,%.cpp,$@))
 
-all: checkdirs bgpd-ng 
+all: checkdirs bgpd-ng
 
 bgpd-ng: $(OBJ)
 	$(ld-command)
@@ -35,6 +35,7 @@ checkdirs:
 
 clean:
 	@rm -rf $(BUILD_DIR)
+	@rm -fr bgpd-ng
 
 # This is GNU makefile extension to notify that roughly means: 'clean' does
 # not depend on any files in order to call it.
