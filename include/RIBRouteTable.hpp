@@ -11,6 +11,6 @@ public:
 	RIBRouteTable();
 	~RIBRouteTable();
 	std::list<RoutePrefix> findBestMatches(const RoutePrefix &route);
-	RoutePrefix calcNextHop(const Prefix &DestAddr);
+	Prefix calcNextHop(const Prefix &DestAddr);
 };
 #endif /* ROUTINGTABLE_HPP_ */

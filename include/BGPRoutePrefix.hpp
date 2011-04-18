@@ -5,7 +5,7 @@
 #include <list>
 #include "RoutePrefix.hpp"
 
-class BGPRoutePrefix : RoutePrefix {
+class BGPRoutePrefix : public RoutePrefix {
 	const __uint16_t getASPathLength();
 private:
 	BGPRoutePrefix* nextHop;

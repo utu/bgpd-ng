@@ -2,13 +2,12 @@
 #define ROUTINGTABLE_HPP_
 
 #include <list>
-#include "Prefix.hpp"
 #include "RoutingTableException.hpp"
 
-template<typename R = Prefix>
+template<typename R>
 class RoutingTable {
 public:
-	RoutingTable();
+	RoutingTable() {};
 	virtual ~RoutingTable() {};
 
 	void clearTable() {
@@ -35,6 +34,7 @@ public:
 	}
 
 	bool completePrefixMatch(const R &route) {
+		// TODO: how can man be sure about template's class hierarchy?
 //		std::list<R>::iterator routeIt;
 //		for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
 //			if (routeIt == route) {
@@ -44,19 +44,7 @@ public:
 		return false;
 	}
 
-	/* Calculates the best matches for the given route prefix.
-	 */
-	virtual std::list<R> findBestMatches(const R &route) =0;
-
-	/* Given the destination BGPRoutePrefix, this function calculates the
-	 * most appropriate NextHop prefix from the routing table.
-	 * The decision criteria are:
-	 *
-	 * 1) If there is a complete prefix match in the routing list.
-	 * 2) If no perfect match is found, we search for best match with shortest AS path.
-	 * 3) Prefer static routes.
-	 */
-	virtual R calcNextHop(const Prefix &DestAddr) =0;
+	virtual Prefix calcNextHop(const Prefix &DestAddr) =0;
 
 protected:
 	std::list<R> routeTable;

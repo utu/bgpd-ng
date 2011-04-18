@@ -3,26 +3,18 @@
 #include "RoutingTableEmptyExecption.hpp"
 
 RIBRouteTable::RIBRouteTable() {
+	routeTable = static_cast<std::list<RoutePrefix> > (routeTable);
 }
 RIBRouteTable::~RIBRouteTable() {
 }
 
 std::list<RoutePrefix> RIBRouteTable::findBestMatches(const RoutePrefix &route) {
-
-	std::list<RoutePrefix> *helpTable = new std::list<RoutePrefix>();
-	std::list<RoutePrefix>::iterator routeIt;
-
-//	for (routeIt = routeTable.begin(); routeIt != routeTable.end(); routeIt++) {
-//
-//		if (route.countMatchingBits(routeIt) == findLongestMatchLength(route)) {
-//			helpTable->push_back(*routeIt);
-//		}
-//	}
-//	return helpTable;
-
+	// TODO: stubb
+	return routeTable;
 }
 
-RoutePrefix RIBRouteTable::calcNextHop(const Prefix &route) {
-
+Prefix RIBRouteTable::calcNextHop(const Prefix &route) {
+	// TODO:: stubb
+	return *routeTable.begin();
 }
 

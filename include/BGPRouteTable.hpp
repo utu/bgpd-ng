@@ -23,6 +23,7 @@ public:
 	 */
 	std::list<BGPRoutePrefix> findBestMatches(const BGPRoutePrefix &route);
 
-	BGPRoutePrefix calcNextHop(const Prefix &DestAddr);
+	Prefix calcNextHop(const Prefix &DestAddr);
+
 };
 #endif /* ROUTINGTABLE_HPP_ */

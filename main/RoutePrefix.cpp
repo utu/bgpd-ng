@@ -9,3 +9,4 @@ const bool RoutePrefix::matches(RoutePrefix &rtable) {
 const bool RoutePrefix::isStatic() {
 	return true;
 }
+
