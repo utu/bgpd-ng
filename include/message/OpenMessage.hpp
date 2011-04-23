@@ -3,8 +3,7 @@
 
 #include <inttypes.h>
 #include "message/BGPMessage.hpp"
-#include "message/header.hpp"
-#include "prefix.hpp"
+#include "Prefix.hpp"
 
 struct OpenMessageOptionalParameters {
 	__uint8_t type;

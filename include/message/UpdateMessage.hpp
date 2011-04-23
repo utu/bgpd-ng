@@ -2,9 +2,9 @@
 #define UPDATEMESSAGE_HPP_
 
 #include <inttypes.h>
+#include <list>
 #include "message/BGPMessage.hpp"
-#include "message/header.hpp"
-#include "prefix.hpp"
+#include "Prefix.hpp"
 
 class PathAttribute {
 public:
@@ -44,9 +44,15 @@ struct UpdateMessageBody {
 };
 
 class UpdateMessage: public BGPMessage {
+public:
 	UpdateMessage();
+	__uint16_t reachabilityLength();
+	void addWithdrawnRoute(const Prefix& prefix);
+	void addPathAttribute(const PathAttribute& attrb);
+	std::list<Prefix> withDrawnRoutes();
+	std::list<PathAttribute> pathAttributes();
 private:
-
+	UpdateMessageBody body;
 };
 
 #endif
